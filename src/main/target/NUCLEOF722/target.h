@@ -26,6 +26,11 @@
 
 #define USE_DEBUG_PIN
 
+#define USE_HARDWARE_REVISION_DETECTION
+#define HW_PIN PB1
+
+#define TARGET_PREINIT
+
 //#define USE_ESC_TELEMETRY
 
 #define LED0_PIN   PB7  // blue

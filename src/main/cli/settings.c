@@ -974,6 +974,8 @@ const clivalue_t valueTable[] = {
 // PG_SERIAL_CONFIG
     { "reboot_character",           VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 48, 126 }, PG_SERIAL_CONFIG, offsetof(serialConfig_t, reboot_character) },
     { "serial_update_rate_hz",      VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 100, 2000 }, PG_SERIAL_CONFIG, offsetof(serialConfig_t, serial_update_rate_hz) },
+    { "serial_swap_ports_enabled",  VAR_UINT8  | MASTER_VALUE  | MODE_LOOKUP, .config.lookup = { TABLE_OFF_ON }, PG_SERIAL_CONFIG, offsetof(serialConfig_t, swap_ports_enabled) },
+    { "serial_swap_ports",          VAR_INT8   | MASTER_VALUE | MODE_ARRAY, .config.array.length = 2, PG_SERIAL_CONFIG, offsetof(serialConfig_t, swap_ports) },
 
 // PG_IMU_CONFIG
     { "imu_dcm_kp",                 VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 0, 32000 }, PG_IMU_CONFIG, offsetof(imuConfig_t, dcm_kp) },

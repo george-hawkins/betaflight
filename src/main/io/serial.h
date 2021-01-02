@@ -127,6 +127,8 @@ typedef struct serialConfig_s {
     serialPortConfig_t portConfigs[SERIAL_PORT_COUNT];
     uint16_t serial_update_rate_hz;
     uint8_t reboot_character;               // which byte is used to reboot. Default 'R', could be changed carefully to something else.
+    uint8_t swap_ports_enabled;
+    int8_t swap_ports[2];
 } serialConfig_t;
 
 PG_DECLARE(serialConfig_t, serialConfig);
