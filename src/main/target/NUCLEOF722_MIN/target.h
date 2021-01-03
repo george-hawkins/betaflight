@@ -22,138 +22,100 @@
 
 #define TARGET_BOARD_IDENTIFIER "NU72"
 
-#define USBD_PRODUCT_STRING "NucleoF722"
+// Many targets define `USBD_PRODUCT_STRING`. However, it only comes into play if using src/main/vcpf4/usbd_desc.c
+// but not if using src/main/vcp_hal/usbd_desc.c (where the hardcoded names "STM32 Virtual ComPort in HS Mode" and
+// "STM32 Virtual ComPort in FS Mode" are used). vcp_hal is used by F7 and H7 targets while vcpf4 is used by F4
+// targets (and F1 and F3 targets use src/main/vcp).
 
-#define USE_DEBUG_PIN
+#define LED0_PIN PB7  // blue
+#define LED1_PIN PB14 // red
 
-//#define USE_ESC_TELEMETRY
+#define USABLE_TIMER_CHANNEL_COUNT 0
 
-#define LED0_PIN   PB7  // blue
-#define LED1_PIN   PB14 // red
-
-//#define USE_BEEPER
-//#define BEEPER_PIN PA0
-//#define BEEPER_INVERTED
-
-#undef USE_MULTI_GYRO
-
-#define USE_ACC
-#define USE_FAKE_ACC
-#define USE_ACC_MPU6050
-
-#define USE_GYRO
-#define USE_FAKE_GYRO
-#define USE_GYRO_MPU6050
-#define GYRO_1_ALIGN       CW270_DEG
-
-// MPU6050 interrupts
-#define USE_MPU_DATA_READY_SIGNAL
-#define USE_EXTI
-#define USE_GYRO_EXTI
-#define GYRO_1_EXTI_PIN PB15
-#define USE_EXTI
-
-#define USE_MAG
-#define USE_FAKE_MAG
-#define USE_MAG_HMC5883
-#define USE_MAG_QMC5883
-#define USE_MAG_LIS3MDL
-#define MAG_HMC5883_ALIGN CW270_DEG_FLIP
-
-#define USE_BARO
-#define USE_FAKE_BARO
-#define USE_BARO_MS5611
-#define USE_BARO_BMP388
-
-#define USABLE_TIMER_CHANNEL_COUNT 9
-
-#define USE_VCP
+#define USE_VCP // Not defining USE_VCP save 18024B.
 #define USE_USB_DETECT
-#define USB_DETECT_PIN   PA9
+#define USB_DETECT_PIN PA9
 
-//#define USE_UART1
-//#define UART1_RX_PIN PA10
-//#define UART1_TX_PIN PA9
+//#define USE_SMARTAUDIO_DPRINTF
 
-#define USE_UART2
-#define UART2_RX_PIN PD6
-#define UART2_TX_PIN PD5
+// Works:
+//
+// * UART1_TX_PIN PB6
+// * UART1_RX_PIN NONE
+//
+// * UART2_RX_PIN PD6 / PA3
+// * UART2_TX_PIN PD5
+//
+// * UART3_TX_PIN PB10 / PC10
+// * UART3_RX_PIN PB11 / PC11
+//
+// * UART4_TX_PIN PC10 / PA0
+// * UART4_RX_PIN PC11
+//
+// * UART5_TX_PIN PC12
+// * UART5_RX_PIN PD2
+//
+// * UART6_TX_PIN PC6
+// * UART6_RX_PIN PC7
+//
+// * UART7_TX_PIN PE8 / PF7
+// * UART7_RX_PIN PE7
+//
+// * UART8_RX_PIN PE0
+//
+// Didnt't work:
+//
+// * UART6_TX_PIN PG14
+// * UART6_RX_PIN PG9
+//
+// Note: TARGET_IO_PORTG must be defined in order to use G pins (or compilation fails) but evidently more is still required.
+// I suspect this isn't anything fundamental and simply that G pins are not used (no other target currently specifies a G pin for
+// anything) and so some minor setup has been missed out for G. However, PG9 and PG14 are defined as UART6 pins in
+// src/main/drivers/serial_uart_stm32f7xx.c so they _should_ work.
+//
 
+// Like `timerHardware` (discussed below), if you add or remove UARTS or change their pin assignments
+// then you have to reset all settings before these changes will show up in the Configurator.
+
+// Many pins can be used for different purposes, e.g. UART, SPI etc. So I looked at which UARTs and which pin combinations are most
+// commonly seen in the existing targets and chose the 4 most popular pairs on the basis that these pairs are unlikely to clash
+// with some other common popular use for a given pin. Interestingly, UARTs 1 and 2 are far less commonly used that UARTs 3 to 6.
+// I thought initially this might be because UARTs 1 and 2 are typically hardwired to other devices on the flight controller but
+// even if these UARTs aren't available for end-users to use they still have to be defined for use in Betaflight (i.e. Betaflight
+// has to know the pins for a given UART whether it's connected to another device on the flight controller or to something connected
+// to UART pins exposed at the edge of the board).
+// I guess instead it reflects something to do with what devices are exposed on the low pin-count packages, like LQFP64, typically
+// used in flight controllers, i.e. maybe UARTs 1 and 2 aren't exposed on these chips.
+
+// 90 targets use these pins like this.
 #define USE_UART3
-#define UART3_RX_PIN PD9
-#define UART3_TX_PIN PD8
+#define UART3_TX_PIN PB10
+#define UART3_RX_PIN PB11
 
+// 17 targets use these pins like this.
 #define USE_UART4
-//#define UART4_RX_PIN PC11  // Used for SDIO
-//#define UART4_TX_PIN PC10  // Used for SDIO
-#define UART4_RX_PIN PA1
-#define UART4_TX_PIN PA0
+#define UART4_TX_PIN PC10
+#define UART4_RX_PIN PC11
 
-//#define USE_UART5
-//#define UART5_RX_PIN PD2  // Used for SDIO
-//#define UART5_TX_PIN PC12  // Used for SDIO
+// 44 targets use these pins like this.
+#define USE_UART5
+#define UART5_TX_PIN PC12
+#define UART5_RX_PIN PD2
 
-//#define USE_UART6
-#define UART6_RX_PIN PC7
+// 56 targets use these pins like this.
+#define USE_UART6
 #define UART6_TX_PIN PC6
-
-//#define USE_UART7
-#define UART7_RX_PIN PE7
-#define UART7_TX_PIN PE8
-
-//#define USE_UART8
-#define UART8_RX_PIN PE0
-#define UART8_TX_PIN PE1
+#define UART6_RX_PIN PC7
 
 #define USE_SOFTSERIAL1
 #define USE_SOFTSERIAL2
 
-#define SERIAL_PORT_COUNT 6 //VCP, USART2, USART3, UART4, SOFTSERIAL x 2
-
-#define USE_ESCSERIAL
-#define ESCSERIAL_TIMER_TX_PIN  PB15 // (Hardware=0, PPM)
-
-#define USE_SPI
-#define USE_SPI_DEVICE_1
-#define USE_SPI_DEVICE_4
-
-#define SPI1_NSS_PIN            PA4
-#define SPI1_SCK_PIN            PA5
-#define SPI1_MISO_PIN           PA6
-#define SPI1_MOSI_PIN           PA7
-
-#define SPI4_NSS_PIN            PE11
-#define SPI4_SCK_PIN            PE12
-#define SPI4_MISO_PIN           PE13
-#define SPI4_MOSI_PIN           PE14
-
-#define USE_SDCARD
-//#define SDCARD_DETECT_INVERTED
-//#define SDCARD_DETECT_PIN                   PF14
-//#define SDCARD_SPI_INSTANCE                 SPI4
-//#define SDCARD_SPI_CS_PIN                   SPI4_NSS_PIN
-//#define SPI4_TX_DMA_OPT                     0     // DMA 2 Stream 1 Channel 4
-#define USE_SDCARD_SDIO
-
-#define SDCARD_SDIO_DMA_OPT     0   // DMA 2 Stream 3 Chanel 4
-//#define SDCARD_SPI_CS_PIN NONE    // This is not used on SDIO
-
-#define USE_I2C
-#define USE_I2C_DEVICE_1
-#define I2C_DEVICE                  (I2CDEV_1)
-#define I2C1_SCL                    PB8
-#define I2C1_SDA                    PB9
-
-#define USE_ADC
-#define VBAT_ADC_PIN                PA3
-#define CURRENT_METER_ADC_PIN       PC0
-#define RSSI_ADC_PIN                PC3
-
-//#define ENABLE_BLACKBOX_LOGGING_ON_SDCARD_BY_DEFAULT
+#define SERIAL_PORT_COUNT 7 //VCP, USART3, UART4, UART5, UART6, SOFTSERIAL x 2
 
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
 
+// Define which pins are available, e.g. all PA pins, all PB pins etc.
 #define TARGET_IO_PORTA 0xffff
 #define TARGET_IO_PORTB 0xffff
 #define TARGET_IO_PORTC 0xffff
@@ -161,4 +123,156 @@
 #define TARGET_IO_PORTE 0xffff
 #define TARGET_IO_PORTF 0xffff
 
-#define USED_TIMERS  ( TIM_N(2) | TIM_N(3) | TIM_N(4) | TIM_N(8) | TIM_N(9) | TIM_N(12) )
+// Setting DEFAULT_AUX_CHANNEL_COUNT, PID_PROFILE_COUNT and CONTROL_RATE_PROFILE_COUNT to 1 saves about 2295B.
+
+#define MINIMAL_CLI // Saves 5196B - if you're using the CLI.
+
+//#undef USE_CLI // Saves 58723B
+
+#undef USE_BLACKBOX // Saves 15084B
+#undef USE_BOARD_INFO // Saves 1292B
+#undef USE_CMS // Saves 24325B
+#undef USE_D_MIN // Saves 1392B
+#undef USE_DSHOT // Saves 42261B
+#undef USE_DYN_LPF // Saves 1473B
+#undef USE_GPS_NMEA // Saves 2096B
+#undef USE_GPS_RESCUE // Saves 4159B
+#undef USE_GPS_UBLOX // Saves 2952B
+#undef USE_GYRO_DATA_ANALYSE // Saves 7072B
+#undef USE_INTEGRATED_YAW_CONTROL // Saves 1136B
+#undef USE_INTERPOLATED_SP // Saves 1680B
+#undef USE_ITERM_RELAX // Saves 1784B
+#undef USE_LED_STRIP // Saves 11060B
+#undef USE_OSD // Saves 17712B
+#undef USE_RCDEVICE // Saves 1845B
+#undef USE_RC_SMOOTHING_FILTER // Saves 7024B
+#undef USE_RUNAWAY_TAKEOFF // Saves 1264B
+#undef USE_SERIAL_4WAY_BLHELI_BOOTLOADER // Saves 2676B
+#undef USE_SERIAL_4WAY_SK_BOOTLOADER // Saves 1468B
+#undef USE_SERVOS // Saves 5257B
+#undef USE_USB_CDC_HID // Saves 2024B
+
+// ----
+
+// Without USE_SERIAL_RX, you won't get SBUS etc.
+#undef USE_SERIAL_RX // Saves 30810B
+
+// The following are dependant on USE_SERIAL_RX being defined.
+//#undef USE_RX_RSSI_DBM // Saves 104B
+//#undef USE_SPEKTRUM_FAKE_RSSI // Saves 192B
+//#undef USE_SPEKTRUM_REAL_RSSI // Saves 408B
+//#undef USE_SERIALRX_SUMH // Saves 508B
+//#undef USE_CRSF_LINK_STATISTICS // Saves 648B
+//#undef USE_SERIALRX_JETIEXBUS // Saves 680B
+//#undef USE_SERIALRX_SUMD // Saves 960B
+//#undef USE_SPEKTRUM_BIND // Saves 983B
+////#undef USE_SERIALRX_SBUS // Saves 993B
+//#undef USE_SERIALRX_XBUS // Saves 1700B
+//#undef USE_SERIALRX_CRSF // Saves 1733B
+//#undef USE_SERIALRX_IBUS // Saves 1769B
+//#undef USE_SERIALRX_SPEKTRUM // Saves 2723B
+
+// ----
+
+// Without USE_VTX_CONTROL, you won't get SA etc. at all, without USE_VTX_COMMON you won't
+// get support for controlling a common set of features across the various VTX protocols.
+//#undef USE_VTX_CONTROL // Saves 12905B
+//#undef USE_VTX_COMMON // Saves 11694B
+
+// USE_VTX_TABLE is the modern way for configuring a table of bands, frequencies and power levels.
+// However, certain flight controllers may not have enough space to support the resulting tables.
+//#undef USE_VTX_TABLE // Saves 2211B
+
+//#undef USE_VTX_SMARTAUDIO // Saves 6013B
+#undef USE_VTX_TRAMP // Saves 1320B
+
+// If you want Spektrum VTX support then USE_SERIALRX_SPEKTRUM has to be defined. This enables various
+// Spektrum features. If you've defined USE_SERIALRX_SPEKTRUM and then want to specifically disable
+// the Spektrum VTX features, you can undefine USE_SPEKTRUM_VTX_TELEMETRY to disable just telemetry data
+// about the VTX or undefine USE_SPEKTRUM_VTX_CONTROL to disable Spektrum VTX support altogether but
+// both together save only 340B.
+
+// ----
+
+// Telemetry isn't just for data like RSSI or temperature, it's also the channel via which the flight controller can talk back to
+// the TX using MSP over telemetry. So we need USE_TELEMETRY and USE_MSP_OVER_TELEMETRY along with the telemetry protocol used by
+// the RX.
+// Update: I thought MSP was coming in via the SBUS (as it comes in on an RX pin) and going out via SPORT (i.e. telemetry, as it
+// goes out on a TX pin). But it turns out telemetry is bi-directional (and half-duplex) and MSP works via telemetry (SBUS is not
+// involved).
+//#undef USE_TELEMETRY // Saves 18824B
+//#undef USE_MSP_OVER_TELEMETRY // Saves 1528B
+
+// Even with everything largely undef-ed you still get "Hdg" (heading) telemetry data. To remove this:
+// # telemetry_disabled_heading set to ON
+// # save
+// And you still get "Tmp1" - this is actually used to encode information about the flight controller state, see FSSP_DATAID_T1
+// in src/main/telemetry/smartport.c. In OpenTX, see see it as "Tmp1 2002C", with the highest decimal place changing rapidly,
+// it's actually a heartbeat value that's continously changing thru the values 1, 2 and 3 but encodes no meaning, the lower
+// places do encode things, e.g. 2 at the end of 2002 means arming is disabled. To remove Tmp1:
+// # set telemetry_disabled_mode=ON
+// # save
+// To me `telemetry_disabled_mode` sounds dramatic but it really does just control if Tmp1 (and under certain circumstances also
+// Tmp2) are sent.
+// I thought MSP data must be encoded into the data for a fake sensor but actually SmartPort protocol supports different
+// frame types - sensor data is sent with a `frameId` (see src/main/telemetry/smartport.h) of FSSP_DATA_FRAME while MSP data
+// comes in with a `frameId` of either `FSSP_MSPC_FRAME_SMARTPORT` or `FSSP_MSPC_FRAME_FPORT` and is sent out with a `frameId`
+// of `FSSP_MSPS_FRAME`.
+
+//#undef USE_TELEMETRY_SMARTPORT // Saves 4728B
+#undef USE_TELEMETRY_IBUS_EXTENDED // Saves 292B
+#undef USE_TELEMETRY_LTM // Saves 1048B
+#undef USE_TELEMETRY_HOTT // Saves 1536B
+#undef USE_TELEMETRY_FRSKY_HUB // Saves 1756B
+#undef USE_TELEMETRY_IBUS // Saves 1780B
+#undef USE_SERIALRX_FPORT // Saves 3312B
+#undef USE_TELEMETRY_MAVLINK // Saves 5312B
+
+// Note that there are quite a lot of other telemetry related defines that don't come into play unless additional things are defined:
+// * USE_DSHOT_TELEMETRY_STATS                                                                            
+// * USE_ESC_SENSOR_TELEMETRY
+// * USE_CRSF_CMS_TELEMETRY                                                                               
+// * USE_SPEKTRUM_CMS_TELEMETRY
+// * USE_TELEMETRY_CRSF
+// * USE_TELEMETRY_JETIEXBUS                                                                              
+// * USE_TELEMETRY_SRXL                                                                                   
+// * USE_TELEMETRY_SENSORS_DISABLED_DETAILS
+
+// ----
+
+// The following 26 undefines barely save anything, combined they save a total of only 9598B.
+#undef USE_BATTERY_VOLTAGE_SAG_COMPENSATION // Saves 756B
+#undef USE_BRUSHED_ESC_AUTODETECT // Saves 156B
+#undef USE_CAMERA_CONTROL // Saves 744B
+#undef USE_CUSTOM_BOX_NAMES // Saves 280B
+#undef USE_GPS // Saves 132B
+#undef USE_GYRO_OVERFLOW_CHECK // Saves 340B
+#undef USE_LAUNCH_CONTROL // Saves 820B
+#undef USE_MCO // Saves 176B
+#undef USE_MSP_DISPLAYPORT // Saves 48B
+#undef USE_MULTI_GYRO // Saves 804B
+#undef USE_OVERCLOCK // Saves 24B
+#undef USE_PERSISTENT_STATS // Saves 388B
+#undef USE_PINIO // Saves 176B
+#undef USE_PINIOBOX // Saves 120B
+#undef USE_PIN_PULL_UP_DOWN // Saves 136B
+#undef USE_PPM // Saves 820B
+#undef USE_PWM // Saves 600B
+#undef USE_RTC_TIME // Saves 1002B
+#undef USE_RX_MSP // Saves 232B
+#undef USE_SERIALRX_SRXL2 // Saves 416B
+#undef USE_TASK_STATISTICS // Saves 800B
+#undef USE_THROTTLE_BOOST // Saves 208B
+#undef USE_THRUST_LINEARIZATION // Saves 204B
+#undef USE_TPA_MODE // Saves 16B
+#undef USE_UNCOMMON_MIXERS // Saves 736B
+#undef USE_VIRTUAL_CURRENT_METER // Saves 496B
+
+// ----
+
+// The following USE_ style defines cannot be undefined without causing a compilation failure:
+// * USE_DMA
+// * USE_HAL_DRIVER
+// * USE_MOTOR
+// * USE_PWM_OUTPUT
+// * USE_TIMER
