@@ -36,7 +36,7 @@
 
 #define USE_VCP
 #define USE_USB_DETECT
-#define USB_DETECT_PIN   PA9
+#define USB_DETECT_PIN PA9
 
 #define USE_UART2
 #define UART2_RX_PIN PD6
@@ -58,9 +58,65 @@
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
 
+// Define which pins are available, e.g. all PA pins, all PB pins etc.
 #define TARGET_IO_PORTA 0xffff
 #define TARGET_IO_PORTB 0xffff
 #define TARGET_IO_PORTC 0xffff
 #define TARGET_IO_PORTD 0xffff
 #define TARGET_IO_PORTE 0xffff
 #define TARGET_IO_PORTF 0xffff
+
+// Setting DEFAULT_AUX_CHANNEL_COUNT, PID_PROFILE_COUNT and CONTROL_RATE_PROFILE_COUNT to 1 saves about 2295B.
+
+#define MINIMAL_CLI // Saves 5196B - if you're using the CLI.
+
+#undef USE_CLI // Saves 58723B
+
+#undef USE_BLACKBOX // Saves 15084B
+#undef USE_BOARD_INFO // Saves 1292B
+#undef USE_CMS // Saves 24325B
+#undef USE_D_MIN // Saves 1392B
+#undef USE_DSHOT // Saves 42261B
+#undef USE_DYN_LPF // Saves 1473B
+#undef USE_GPS_NMEA // Saves 2096B
+#undef USE_GPS_UBLOX // Saves 2952B
+#undef USE_GYRO_DATA_ANALYSE // Saves 7072B
+#undef USE_INTEGRATED_YAW_CONTROL // Saves 1136B
+#undef USE_INTERPOLATED_SP // Saves 1680B
+#undef USE_ITERM_RELAX // Saves 1784B
+#undef USE_LED_STRIP_STATUS_MODE // Saves 9133B
+#undef USE_OSD // Saves 17712B
+#undef USE_RCDEVICE // Saves 1845B
+#undef USE_RC_SMOOTHING_FILTER // Saves 7024B
+#undef USE_RUNAWAY_TAKEOFF // Saves 1264B
+#undef USE_SERIAL_4WAY_BLHELI_BOOTLOADER // Saves 2676B
+#undef USE_SERIAL_4WAY_SK_BOOTLOADER // Saves 1468B
+#undef USE_SERIAL_RX // Saves 30810B
+#undef USE_SERVOS // Saves 5257B
+#undef USE_TELEMETRY // Saves 18824B
+#undef USE_USB_CDC_HID // Saves 2024B
+#undef USE_VTX_COMMON // Saves 11694B
+
+// The following 22 undefines barely save anything, combined they save a total of only 9598B.
+#undef USE_BATTERY_VOLTAGE_SAG_COMPENSATION // Saves 756B
+#undef USE_BRUSHED_ESC_AUTODETECT // Saves 156B
+#undef USE_CAMERA_CONTROL // Saves 744B
+#undef USE_CUSTOM_BOX_NAMES // Saves 280B
+#undef USE_GPS // Saves 132B
+#undef USE_GYRO_OVERFLOW_CHECK // Saves 340B
+#undef USE_LAUNCH_CONTROL // Saves 820B
+#undef USE_MCO // Saves 176B
+#undef USE_MSP_DISPLAYPORT // Saves 48B
+#undef USE_MULTI_GYRO // Saves 804B
+#undef USE_PERSISTENT_STATS // Saves 388B
+#undef USE_PINIOBOX // Saves 120B
+#undef USE_PIN_PULL_UP_DOWN // Saves 136B
+#undef USE_PPM // Saves 820B
+#undef USE_RTC_TIME // Saves 1002B
+#undef USE_SERIALRX_SRXL2 // Saves 416B
+#undef USE_TASK_STATISTICS // Saves 800B
+#undef USE_THROTTLE_BOOST // Saves 208B
+#undef USE_THRUST_LINEARIZATION // Saves 204B
+#undef USE_TPA_MODE // Saves 16B
+#undef USE_UNCOMMON_MIXERS // Saves 736B
+#undef USE_VIRTUAL_CURRENT_METER // Saves 496B
