@@ -32,7 +32,7 @@
 #define LED0_PIN   PB7  // blue
 #define LED1_PIN   PB14 // red
 
-#define USABLE_TIMER_CHANNEL_COUNT 9
+#define USABLE_TIMER_CHANNEL_COUNT 0
 
 #define USE_VCP
 #define USE_USB_DETECT
@@ -64,5 +64,3 @@
 #define TARGET_IO_PORTD 0xffff
 #define TARGET_IO_PORTE 0xffff
 #define TARGET_IO_PORTF 0xffff
-
-#define USED_TIMERS  ( TIM_N(2) | TIM_N(3) | TIM_N(4) | TIM_N(8) | TIM_N(9) | TIM_N(12) )
