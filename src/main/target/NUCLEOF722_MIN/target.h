@@ -94,10 +94,10 @@
 #undef USE_SERVOS // Saves 5257B
 #undef USE_TELEMETRY // Saves 18824B
 #undef USE_USB_CDC_HID // Saves 2024B
-#undef USE_VTX_COMMON // Saves 11694B
 
 // ----
 
+// Without USE_SERIAL_RX, you won't get SBUS etc.
 //#undef USE_SERIAL_RX // Saves 30810B
 
 // The following are dependant on USE_SERIAL_RX being defined.
@@ -114,6 +114,26 @@
 #undef USE_SERIALRX_CRSF // Saves 1733B
 #undef USE_SERIALRX_IBUS // Saves 1769B
 #undef USE_SERIALRX_SPEKTRUM // Saves 2723B
+
+// ----
+
+// Without USE_VTX_CONTROL, you won't get SA etc. at all, without USE_VTX_COMMON you won't
+// get support for controlling a common set of features across the various VTX protocols.
+//#undef USE_VTX_CONTROL // Saves 12905B
+//#undef USE_VTX_COMMON // Saves 11694B
+
+// USE_VTX_TABLE is the modern way for configuring a table of bands, frequencies and power levels.
+// However, certain flight controllers may not have enough space to support the resulting tables.
+//#undef USE_VTX_TABLE // Saves 2211B
+
+//#undef USE_VTX_SMARTAUDIO // Saves 6013B
+#undef USE_VTX_TRAMP // Saves 1320B
+
+// If you want Spektrum VTX support then USE_SERIALRX_SPEKTRUM has to be defined. This enables various
+// Spektrum features. If you've defined USE_SERIALRX_SPEKTRUM and then want to specifically disable
+// the Spektrum VTX features, you can undefine USE_SPEKTRUM_VTX_TELEMETRY to disable just telemetry data
+// about the VTX or undefine USE_SPEKTRUM_VTX_CONTROL to disable Spektrum VTX support altogether but
+// both together save only 340B.
 
 // ----
 
