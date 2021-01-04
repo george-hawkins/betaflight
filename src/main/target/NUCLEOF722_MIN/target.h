@@ -91,11 +91,31 @@
 #undef USE_RUNAWAY_TAKEOFF // Saves 1264B
 #undef USE_SERIAL_4WAY_BLHELI_BOOTLOADER // Saves 2676B
 #undef USE_SERIAL_4WAY_SK_BOOTLOADER // Saves 1468B
-#undef USE_SERIAL_RX // Saves 30810B
 #undef USE_SERVOS // Saves 5257B
 #undef USE_TELEMETRY // Saves 18824B
 #undef USE_USB_CDC_HID // Saves 2024B
 #undef USE_VTX_COMMON // Saves 11694B
+
+// ----
+
+//#undef USE_SERIAL_RX // Saves 30810B
+
+// The following are dependant on USE_SERIAL_RX being defined.
+#undef USE_RX_RSSI_DBM // Saves 104B
+#undef USE_SPEKTRUM_FAKE_RSSI // Saves 192B
+#undef USE_SPEKTRUM_REAL_RSSI // Saves 408B
+#undef USE_SERIALRX_SUMH // Saves 508B
+#undef USE_CRSF_LINK_STATISTICS // Saves 648B
+#undef USE_SERIALRX_JETIEXBUS // Saves 680B
+#undef USE_SERIALRX_SUMD // Saves 960B
+#undef USE_SPEKTRUM_BIND // Saves 983B
+//#undef USE_SERIALRX_SBUS // Saves 993B
+#undef USE_SERIALRX_XBUS // Saves 1700B
+#undef USE_SERIALRX_CRSF // Saves 1733B
+#undef USE_SERIALRX_IBUS // Saves 1769B
+#undef USE_SERIALRX_SPEKTRUM // Saves 2723B
+
+// ----
 
 // The following 22 undefines barely save anything, combined they save a total of only 9598B.
 #undef USE_BATTERY_VOLTAGE_SAG_COMPENSATION // Saves 756B
