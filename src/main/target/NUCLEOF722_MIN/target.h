@@ -70,7 +70,7 @@
 
 #define MINIMAL_CLI // Saves 5196B - if you're using the CLI.
 
-#undef USE_CLI // Saves 58723B
+//#undef USE_CLI // Saves 58723B
 
 #undef USE_BLACKBOX // Saves 15084B
 #undef USE_BOARD_INFO // Saves 1292B
@@ -92,7 +92,6 @@
 #undef USE_SERIAL_4WAY_BLHELI_BOOTLOADER // Saves 2676B
 #undef USE_SERIAL_4WAY_SK_BOOTLOADER // Saves 1468B
 #undef USE_SERVOS // Saves 5257B
-#undef USE_TELEMETRY // Saves 18824B
 #undef USE_USB_CDC_HID // Saves 2024B
 
 // ----
@@ -134,6 +133,10 @@
 // the Spektrum VTX features, you can undefine USE_SPEKTRUM_VTX_TELEMETRY to disable just telemetry data
 // about the VTX or undefine USE_SPEKTRUM_VTX_CONTROL to disable Spektrum VTX support altogether but
 // both together save only 340B.
+
+// ----
+
+//#undef USE_TELEMETRY // Saves 18824B
 
 // ----
 
