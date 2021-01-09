@@ -139,7 +139,29 @@
 
 // ----
 
+// Telemetry isn't just for data like RSSI or temperature, it's also the channel via which the flight controller can talk back to
+// the TX using MSP over telemetry. So we need USE_TELEMETRY and USE_MSP_OVER_TELEMETRY along with the telemetry protocol used by
+// the RX.
 //#undef USE_TELEMETRY // Saves 18824B
+//#undef USE_MSP_OVER_TELEMETRY // Saves 1528B
+//#undef USE_TELEMETRY_SMARTPORT // Saves 4728B
+#undef USE_TELEMETRY_IBUS_EXTENDED // Saves 292B
+#undef USE_TELEMETRY_LTM // Saves 1048B
+#undef USE_TELEMETRY_HOTT // Saves 1536B
+#undef USE_TELEMETRY_FRSKY_HUB // Saves 1756B
+#undef USE_TELEMETRY_IBUS // Saves 1780B
+#undef USE_SERIALRX_FPORT // Saves 3312B
+#undef USE_TELEMETRY_MAVLINK // Saves 5312B
+
+// Note that there are quite a lot of other telemetry related defines that don't come into play unless additional things are defined:
+// * USE_DSHOT_TELEMETRY_STATS                                                                            
+// * USE_ESC_SENSOR_TELEMETRY
+// * USE_CRSF_CMS_TELEMETRY                                                                               
+// * USE_SPEKTRUM_CMS_TELEMETRY
+// * USE_TELEMETRY_CRSF
+// * USE_TELEMETRY_JETIEXBUS                                                                              
+// * USE_TELEMETRY_SRXL                                                                                   
+// * USE_TELEMETRY_SENSORS_DISABLED_DETAILS
 
 // ----
 
