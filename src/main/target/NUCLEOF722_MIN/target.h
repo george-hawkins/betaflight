@@ -80,28 +80,37 @@
 // Like `timerHardware` (discussed below), if you add or remove UARTS or change their pin assignments
 // then you have to reset all settings before these changes will show up in the Configurator.
 
-#define USE_UART1
-#define UART1_TX_PIN PB6
-#define UART1_RX_PIN NONE
+// Many pins can be used for different purposes, e.g. UART, SPI etc. So I looked at which UARTs and which pin combinations are most
+// commonly seen in the existing targets and chose the 4 most popular pairs on the basis that these pairs are unlikely to clash
+// with some other common popular use for a given pin. Interestingly, UARTs 1 and 2 are far less commonly used that UARTs 3 to 6.
+// Perhaps these UARTs are typically hardwired to other devices on the flight controller.
 
-#define USE_UART2
-#define UART2_TX_PIN PD5
-#define UART2_RX_PIN PD6
-
+// 90 targets use these pins like this.
 #define USE_UART3
 #define UART3_TX_PIN PB10
 #define UART3_RX_PIN PB11
 
+// 17 targets use these pins like this.
 #define USE_UART4
 #define UART4_TX_PIN PC10
 #define UART4_RX_PIN PC11
+
+// 44 targets use these pins like this.
+#define USE_UART5
+#define UART5_TX_PIN PC12
+#define UART5_RX_PIN PD2
+
+// 56 targets use these pins like this.
+#define USE_UART6
+#define UART6_TX_PIN PC6
+#define UART6_RX_PIN PC7
 
 #define USE_SOFTSERIAL1
 #define SOFTSERIAL1_TX_PIN PB4 // Alternatively, one could specify `resource SERIAL_TX 11 B04` via the CLI.
 
 #define USE_SOFTSERIAL2
 
-#define SERIAL_PORT_COUNT 7 //VCP, UART1, UART2, USART3, UART4, SOFTSERIAL x 2
+#define SERIAL_PORT_COUNT 7 //VCP, USART3, UART4, UART5, UART6, SOFTSERIAL x 2
 
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
