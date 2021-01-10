@@ -27,33 +27,81 @@
 
 #define TARGET_BOARD_IDENTIFIER "NU72"
 
-#define USBD_PRODUCT_STRING "NucleoF722"
+// Many targets define `USBD_PRODUCT_STRING`. However, it only comes into play if using src/main/vcpf4/usbd_desc.c
+// but not if using src/main/vcp_hal/usbd_desc.c (where the hardcoded names "STM32 Virtual ComPort in HS Mode" and
+// "STM32 Virtual ComPort in FS Mode" are used). vcp_hal is used by F7 and H7 targets while vcpf4 is used by F4
+// targets (and F1 and F3 targets use src/main/vcp).
 
-#define LED0_PIN   PB7  // blue
-#define LED1_PIN   PB14 // red
+#define LED0_PIN PB7  // blue
+#define LED1_PIN PB14 // red
 
-#define USE_VCP
+#define USE_VCP // Not defining USE_VCP save 18024B.
 #define USE_USB_DETECT
 #define USB_DETECT_PIN PA9
 
+//#define USE_SMARTAUDIO_DPRINTF
+
+// Works:
+//
+// * UART1_TX_PIN PB6
+// * UART1_RX_PIN NONE
+//
+// * UART2_RX_PIN PD6 / PA3
+// * UART2_TX_PIN PD5
+//
+// * UART3_TX_PIN PB10 / PC10
+// * UART3_RX_PIN PB11 / PC11
+//
+// * UART4_TX_PIN PC10 / PA0
+// * UART4_RX_PIN PC11
+//
+// * UART5_TX_PIN PC12
+// * UART5_RX_PIN PD2
+//
+// * UART6_TX_PIN PC6
+// * UART6_RX_PIN PC7
+//
+// * UART7_TX_PIN PE8 / PF7
+// * UART7_RX_PIN PE7
+//
+// * UART8_RX_PIN PE0
+//
+// Didnt't work:
+//
+// * UART6_TX_PIN PG14
+// * UART6_RX_PIN PG9
+//
+// Note: TARGET_IO_PORTG must be defined in order to use G pins (or compilation fails) but evidently more is still required.
+// I suspect this isn't anything fundamental and simply that G pins are not used (no other target currently specifies a G pin for
+// anything) and so some minor setup has been missed out for G. However, PG9 and PG14 are defined as UART6 pins in
+// src/main/drivers/serial_uart_stm32f7xx.c so they _should_ work.
+//
+
+// Like `timerHardware` (discussed below), if you add or remove UARTS or change their pin assignments
+// then you have to reset all settings before these changes will show up in the Configurator.
+
+#define USE_UART1
+#define UART1_TX_PIN PB6
+#define UART1_RX_PIN NONE
+
 #define USE_UART2
-#define UART2_RX_PIN PD6
 #define UART2_TX_PIN PD5
+#define UART2_RX_PIN PD6
 
 #define USE_UART3
-#define UART3_RX_PIN PD9
-#define UART3_TX_PIN PD8
+#define UART3_TX_PIN PB10
+#define UART3_RX_PIN PB11
 
 #define USE_UART4
-#define UART4_RX_PIN PA1
-#define UART4_TX_PIN PA0
+#define UART4_TX_PIN PC10
+#define UART4_RX_PIN PC11
 
 #define USE_SOFTSERIAL1
 #define SOFTSERIAL1_TX_PIN PB4 // Alternatively, one could specify `resource SERIAL_TX 11 B04` via the CLI.
 
 #define USE_SOFTSERIAL2
 
-#define SERIAL_PORT_COUNT 6 //VCP, USART2, USART3, UART4, SOFTSERIAL x 2
+#define SERIAL_PORT_COUNT 7 //VCP, UART1, UART2, USART3, UART4, SOFTSERIAL x 2
 
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
@@ -142,6 +190,9 @@
 // Telemetry isn't just for data like RSSI or temperature, it's also the channel via which the flight controller can talk back to
 // the TX using MSP over telemetry. So we need USE_TELEMETRY and USE_MSP_OVER_TELEMETRY along with the telemetry protocol used by
 // the RX.
+// Update: I thought MSP was coming in via the SBUS (as it comes in on an RX pin) and going out via SPORT (i.e. telemetry, as it
+// goes out on a TX pin). But it turns out telemetry is bi-directional (and half-duplex) and MSP works via telemetry (SBUS is not
+// involved).
 //#undef USE_TELEMETRY // Saves 18824B
 //#undef USE_MSP_OVER_TELEMETRY // Saves 1528B
 //#undef USE_TELEMETRY_SMARTPORT // Saves 4728B
