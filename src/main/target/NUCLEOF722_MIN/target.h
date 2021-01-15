@@ -215,6 +215,23 @@
 // involved).
 //#undef USE_TELEMETRY // Saves 18824B
 //#undef USE_MSP_OVER_TELEMETRY // Saves 1528B
+
+// Even with everything largely undef-ed you still get "Hdg" (heading) telemetry data. To remove this:
+// # telemetry_disabled_heading set to ON
+// # save
+// And you still get "Tmp1" - this is actually used to encode information about the flight controller state, see FSSP_DATAID_T1
+// in src/main/telemetry/smartport.c. In OpenTX, see see it as "Tmp1 2002C", with the highest decimal place changing rapidly,
+// it's actually a heartbeat value that's continously changing thru the values 1, 2 and 3 but encodes no meaning, the lower
+// places do encode things, e.g. 2 at the end of 2002 means arming is disabled. To remove Tmp1:
+// # set telemetry_disabled_mode=ON
+// # save
+// To me `telemetry_disabled_mode` sounds dramatic but it really does just control if Tmp1 (and under certain circumstances also
+// Tmp2) are sent.
+// I thought MSP data must be encoded into the data for a fake sensor but actually SmartPort protocol supports different
+// frame types - sensor data is sent with a `frameId` (see src/main/telemetry/smartport.h) of FSSP_DATA_FRAME while MSP data
+// comes in with a `frameId` of either `FSSP_MSPC_FRAME_SMARTPORT` or `FSSP_MSPC_FRAME_FPORT` and is sent out with a `frameId`
+// of `FSSP_MSPS_FRAME`.
+
 //#undef USE_TELEMETRY_SMARTPORT // Saves 4728B
 #undef USE_TELEMETRY_IBUS_EXTENDED // Saves 292B
 #undef USE_TELEMETRY_LTM // Saves 1048B
