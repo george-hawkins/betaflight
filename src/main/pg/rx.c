@@ -20,8 +20,6 @@
 
 #include "platform.h"
 
-#if defined(USE_PWM) || defined(USE_PPM) || defined(USE_SERIAL_RX) || defined(USE_RX_MSP) || defined(USE_RX_SPI)
-
 #include "pg/pg.h"
 #include "pg/pg_ids.h"
 #include "rx.h"
@@ -81,5 +79,3 @@ void pgResetFn_rxConfig(rxConfig_t *rxConfig)
     parseRcChannels("AETR1234", rxConfig);
 #endif
 }
-
-#endif
