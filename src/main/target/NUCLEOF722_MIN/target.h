@@ -79,7 +79,12 @@
 // Many pins can be used for different purposes, e.g. UART, SPI etc. So I looked at which UARTs and which pin combinations are most
 // commonly seen in the existing targets and chose the 4 most popular pairs on the basis that these pairs are unlikely to clash
 // with some other common popular use for a given pin. Interestingly, UARTs 1 and 2 are far less commonly used that UARTs 3 to 6.
-// Perhaps these UARTs are typically hardwired to other devices on the flight controller.
+// I thought initially this might be because UARTs 1 and 2 are typically hardwired to other devices on the flight controller but
+// even if these UARTs aren't available for end-users to use they still have to be defined for use in Betaflight (i.e. Betaflight
+// has to know the pins for a given UART whether it's connected to another device on the flight controller or to something connected
+// to UART pins exposed at the edge of the board).
+// I guess instead it reflects something to do with what devices are exposed on the low pin-count packages, like LQFP64, typically
+// used in flight controllers, i.e. maybe UARTs 1 and 2 aren't exposed on these chips.
 
 // Remember to also comment/uncomment the VCP feature in target.mk to match whether USE_VCP is defined or not.
 //#define USE_VCP // Not defining USE_VCP save 18024B.
@@ -163,22 +168,22 @@
 // ----
 
 // Without USE_SERIAL_RX, you won't get SBUS etc.
-//#undef USE_SERIAL_RX // Saves 30810B
+#undef USE_SERIAL_RX // Saves 30810B
 
 // The following are dependant on USE_SERIAL_RX being defined.
-#undef USE_RX_RSSI_DBM // Saves 104B
-#undef USE_SPEKTRUM_FAKE_RSSI // Saves 192B
-#undef USE_SPEKTRUM_REAL_RSSI // Saves 408B
-#undef USE_SERIALRX_SUMH // Saves 508B
-#undef USE_CRSF_LINK_STATISTICS // Saves 648B
-#undef USE_SERIALRX_JETIEXBUS // Saves 680B
-#undef USE_SERIALRX_SUMD // Saves 960B
-#undef USE_SPEKTRUM_BIND // Saves 983B
-//#undef USE_SERIALRX_SBUS // Saves 993B
-#undef USE_SERIALRX_XBUS // Saves 1700B
-#undef USE_SERIALRX_CRSF // Saves 1733B
-#undef USE_SERIALRX_IBUS // Saves 1769B
-#undef USE_SERIALRX_SPEKTRUM // Saves 2723B
+//#undef USE_RX_RSSI_DBM // Saves 104B
+//#undef USE_SPEKTRUM_FAKE_RSSI // Saves 192B
+//#undef USE_SPEKTRUM_REAL_RSSI // Saves 408B
+//#undef USE_SERIALRX_SUMH // Saves 508B
+//#undef USE_CRSF_LINK_STATISTICS // Saves 648B
+//#undef USE_SERIALRX_JETIEXBUS // Saves 680B
+//#undef USE_SERIALRX_SUMD // Saves 960B
+//#undef USE_SPEKTRUM_BIND // Saves 983B
+////#undef USE_SERIALRX_SBUS // Saves 993B
+//#undef USE_SERIALRX_XBUS // Saves 1700B
+//#undef USE_SERIALRX_CRSF // Saves 1733B
+//#undef USE_SERIALRX_IBUS // Saves 1769B
+//#undef USE_SERIALRX_SPEKTRUM // Saves 2723B
 
 // ----
 
