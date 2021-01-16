@@ -281,3 +281,12 @@
 #undef USE_TPA_MODE // Saves 16B
 #undef USE_UNCOMMON_MIXERS // Saves 736B
 #undef USE_VIRTUAL_CURRENT_METER // Saves 496B
+
+// ----
+
+// The following USE_ style defines cannot be undefined without causing a compilation failure:
+// * USE_DMA
+// * USE_HAL_DRIVER
+// * USE_MOTOR
+// * USE_PWM_OUTPUT
+// * USE_TIMER
