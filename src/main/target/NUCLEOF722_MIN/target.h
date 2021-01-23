@@ -35,10 +35,6 @@
 #define LED0_PIN PB7  // blue
 #define LED1_PIN PB14 // red
 
-#define USE_VCP // Not defining USE_VCP save 18024B.
-#define USE_USB_DETECT
-#define USB_DETECT_PIN PA9
-
 //#define USE_SMARTAUDIO_DPRINTF
 
 // Works:
@@ -85,6 +81,12 @@
 // with some other common popular use for a given pin. Interestingly, UARTs 1 and 2 are far less commonly used that UARTs 3 to 6.
 // Perhaps these UARTs are typically hardwired to other devices on the flight controller.
 
+#define USE_VCP // Not defining USE_VCP save 18024B.
+#define USE_USB_DETECT
+#define USB_DETECT_PIN PA9
+
+#define SERIAL_PORT_COUNT 5 // VCP, USART3, UART4, UART5, UART6
+
 // 90 targets use these pins like this.
 #define USE_UART3
 #define UART3_TX_PIN PB10
@@ -105,12 +107,9 @@
 #define UART6_TX_PIN PC6
 #define UART6_RX_PIN PC7
 
-#define USE_SOFTSERIAL1
-#define SOFTSERIAL1_TX_PIN PB4 // Alternatively, one could specify `resource SERIAL_TX 11 B04` via the CLI.
-
-#define USE_SOFTSERIAL2
-
-#define SERIAL_PORT_COUNT 7 //VCP, USART3, UART4, UART5, UART6, SOFTSERIAL x 2
+//#define USE_SOFTSERIAL1
+//#define SOFTSERIAL1_TX_PIN PB4 // Alternatively, one could specify `resource SERIAL_TX 11 B04` via the CLI.
+//#define USE_SOFTSERIAL2
 
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
