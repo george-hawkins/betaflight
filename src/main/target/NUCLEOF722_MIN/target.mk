@@ -6,7 +6,7 @@
 F7X2RE_TARGETS += $(TARGET)
 
 # Some features have to be explicitly enabled by adding to FEATURES. To see which features search make/source.mk for FEATURES.
-FEATURES += VCP
+#FEATURES += VCP
 
 # The majority of files under src/main/drivers/accgyro are included automatically but specific devices have to be included
 # explicitly. This is done using TARGET_SRC like so:

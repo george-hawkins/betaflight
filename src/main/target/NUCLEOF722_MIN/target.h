@@ -81,11 +81,18 @@
 // with some other common popular use for a given pin. Interestingly, UARTs 1 and 2 are far less commonly used that UARTs 3 to 6.
 // Perhaps these UARTs are typically hardwired to other devices on the flight controller.
 
-#define USE_VCP // Not defining USE_VCP save 18024B.
+// Remember to also comment/uncomment the VCP feature in target.mk to match whether USE_VCP is defined or not.
+//#define USE_VCP // Not defining USE_VCP save 18024B.
+
+// If using USE_SOFTSERIAL1 and/or USE_SOFTSERIAL2, each counts towards the port count.
+#ifdef USE_VCP
 #define USE_USB_DETECT
 #define USB_DETECT_PIN PA9
-
 #define SERIAL_PORT_COUNT 5 // VCP, USART3, UART4, UART5, UART6
+#else
+#define SERIAL_PORT_COUNT 4 // USART3, UART4, UART5, UART6
+#define USE_TARGET_CONFIG // Enable specifying MSP port in config.c
+#endif
 
 // 90 targets use these pins like this.
 #define USE_UART3
