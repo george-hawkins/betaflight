@@ -49,6 +49,8 @@
 #define UART4_TX_PIN PA0
 
 #define USE_SOFTSERIAL1
+#define SOFTSERIAL1_TX_PIN PB4 // Alternatively, one could specify `resource SERIAL_TX 11 B04` via the CLI.
+
 #define USE_SOFTSERIAL2
 
 #define SERIAL_PORT_COUNT 6 //VCP, USART2, USART3, UART4, SOFTSERIAL x 2
@@ -64,7 +66,8 @@
 #define TARGET_IO_PORTE 0xffff
 #define TARGET_IO_PORTF 0xffff
 
-#define USABLE_TIMER_CHANNEL_COUNT 0
+#define USABLE_TIMER_CHANNEL_COUNT 1 // The number of pins that are defined in timerHardware in target.c.
+#define USED_TIMERS  ( TIM_N(3) ) // An ORed list of the timers used in entries in timerHardware.
 
 // Setting DEFAULT_AUX_CHANNEL_COUNT, PID_PROFILE_COUNT and CONTROL_RATE_PROFILE_COUNT to 1 saves about 2295B.
 
