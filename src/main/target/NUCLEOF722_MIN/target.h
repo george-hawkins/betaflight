@@ -32,60 +32,13 @@
 
 #define USABLE_TIMER_CHANNEL_COUNT 0
 
+#define SERIAL_PORT_COUNT 7 // VCP, USART3, UART4, UART5, UART6, SOFTSERIAL x 2
+
 #define USE_VCP // Not defining USE_VCP save 18024B.
 #define USE_USB_DETECT
 #define USB_DETECT_PIN PA9
 
 //#define USE_SMARTAUDIO_DPRINTF
-
-// Works:
-//
-// * UART1_TX_PIN PB6
-// * UART1_RX_PIN NONE
-//
-// * UART2_RX_PIN PD6 / PA3
-// * UART2_TX_PIN PD5
-//
-// * UART3_TX_PIN PB10 / PC10
-// * UART3_RX_PIN PB11 / PC11
-//
-// * UART4_TX_PIN PC10 / PA0
-// * UART4_RX_PIN PC11
-//
-// * UART5_TX_PIN PC12
-// * UART5_RX_PIN PD2
-//
-// * UART6_TX_PIN PC6
-// * UART6_RX_PIN PC7
-//
-// * UART7_TX_PIN PE8 / PF7
-// * UART7_RX_PIN PE7
-//
-// * UART8_RX_PIN PE0
-//
-// Didnt't work:
-//
-// * UART6_TX_PIN PG14
-// * UART6_RX_PIN PG9
-//
-// Note: TARGET_IO_PORTG must be defined in order to use G pins (or compilation fails) but evidently more is still required.
-// I suspect this isn't anything fundamental and simply that G pins are not used (no other target currently specifies a G pin for
-// anything) and so some minor setup has been missed out for G. However, PG9 and PG14 are defined as UART6 pins in
-// src/main/drivers/serial_uart_stm32f7xx.c so they _should_ work.
-//
-
-// Like `timerHardware` (discussed below), if you add or remove UARTS or change their pin assignments
-// then you have to reset all settings before these changes will show up in the Configurator.
-
-// Many pins can be used for different purposes, e.g. UART, SPI etc. So I looked at which UARTs and which pin combinations are most
-// commonly seen in the existing targets and chose the 4 most popular pairs on the basis that these pairs are unlikely to clash
-// with some other common popular use for a given pin. Interestingly, UARTs 1 and 2 are far less commonly used that UARTs 3 to 6.
-// I thought initially this might be because UARTs 1 and 2 are typically hardwired to other devices on the flight controller but
-// even if these UARTs aren't available for end-users to use they still have to be defined for use in Betaflight (i.e. Betaflight
-// has to know the pins for a given UART whether it's connected to another device on the flight controller or to something connected
-// to UART pins exposed at the edge of the board).
-// I guess instead it reflects something to do with what devices are exposed on the low pin-count packages, like LQFP64, typically
-// used in flight controllers, i.e. maybe UARTs 1 and 2 aren't exposed on these chips.
 
 // 90 targets use these pins like this.
 #define USE_UART3
@@ -109,11 +62,6 @@
 
 #define USE_SOFTSERIAL1
 #define USE_SOFTSERIAL2
-
-#define SERIAL_PORT_COUNT 7 //VCP, USART3, UART4, UART5, UART6, SOFTSERIAL x 2
-
-#define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
-#define SERIALRX_PROVIDER       SERIALRX_SBUS
 
 // Define which pins are available, e.g. all PA pins, all PB pins etc.
 #define TARGET_IO_PORTA 0xffff
@@ -157,6 +105,12 @@
 // Without USE_SERIAL_RX, you won't get SBUS etc.
 #undef USE_SERIAL_RX // Saves 30810B
 
+// In the Configurator (on the Configuration tab) one can change the receiver mode but with
+// `DEFAULT_RX_FEATURE` you can set the initial mode, e.g. to RX serial, and with
+// `SERIALRX_PROVIDER` you can set the provider, used with that mode, e.g. to SBUS.
+//#define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
+//#define SERIALRX_PROVIDER       SERIALRX_SBUS
+
 // The following are dependant on USE_SERIAL_RX being defined.
 //#undef USE_RX_RSSI_DBM // Saves 104B
 //#undef USE_SPEKTRUM_FAKE_RSSI // Saves 192B
@@ -194,30 +148,10 @@
 
 // ----
 
-// Telemetry isn't just for data like RSSI or temperature, it's also the channel via which the flight controller can talk back to
-// the TX using MSP over telemetry. So we need USE_TELEMETRY and USE_MSP_OVER_TELEMETRY along with the telemetry protocol used by
-// the RX.
-// Update: I thought MSP was coming in via the SBUS (as it comes in on an RX pin) and going out via SPORT (i.e. telemetry, as it
-// goes out on a TX pin). But it turns out telemetry is bi-directional (and half-duplex) and MSP works via telemetry (SBUS is not
-// involved).
+// For the flight controller to be able to communicate with the TX (and not just send data like temperature) we need
+// USE_MSP_OVER_TELEMETRY in addition to USE_TELEMETRY.
 //#undef USE_TELEMETRY // Saves 18824B
 //#undef USE_MSP_OVER_TELEMETRY // Saves 1528B
-
-// Even with everything largely undef-ed you still get "Hdg" (heading) telemetry data. To remove this:
-// # telemetry_disabled_heading set to ON
-// # save
-// And you still get "Tmp1" - this is actually used to encode information about the flight controller state, see FSSP_DATAID_T1
-// in src/main/telemetry/smartport.c. In OpenTX, see see it as "Tmp1 2002C", with the highest decimal place changing rapidly,
-// it's actually a heartbeat value that's continously changing thru the values 1, 2 and 3 but encodes no meaning, the lower
-// places do encode things, e.g. 2 at the end of 2002 means arming is disabled. To remove Tmp1:
-// # set telemetry_disabled_mode=ON
-// # save
-// To me `telemetry_disabled_mode` sounds dramatic but it really does just control if Tmp1 (and under certain circumstances also
-// Tmp2) are sent.
-// I thought MSP data must be encoded into the data for a fake sensor but actually SmartPort protocol supports different
-// frame types - sensor data is sent with a `frameId` (see src/main/telemetry/smartport.h) of FSSP_DATA_FRAME while MSP data
-// comes in with a `frameId` of either `FSSP_MSPC_FRAME_SMARTPORT` or `FSSP_MSPC_FRAME_FPORT` and is sent out with a `frameId`
-// of `FSSP_MSPS_FRAME`.
 
 //#undef USE_TELEMETRY_SMARTPORT // Saves 4728B
 #undef USE_TELEMETRY_IBUS_EXTENDED // Saves 292B
