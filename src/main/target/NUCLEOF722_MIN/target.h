@@ -32,8 +32,6 @@
 #define LED0_PIN   PB7  // blue
 #define LED1_PIN   PB14 // red
 
-#define USABLE_TIMER_CHANNEL_COUNT 0
-
 #define USE_VCP
 #define USE_USB_DETECT
 #define USB_DETECT_PIN PA9
@@ -65,6 +63,8 @@
 #define TARGET_IO_PORTD 0xffff
 #define TARGET_IO_PORTE 0xffff
 #define TARGET_IO_PORTF 0xffff
+
+#define USABLE_TIMER_CHANNEL_COUNT 0
 
 // Setting DEFAULT_AUX_CHANNEL_COUNT, PID_PROFILE_COUNT and CONTROL_RATE_PROFILE_COUNT to 1 saves about 2295B.
 
